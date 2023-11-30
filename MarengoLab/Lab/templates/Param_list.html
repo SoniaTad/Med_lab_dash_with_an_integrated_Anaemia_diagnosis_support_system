@@ -1,0 +1,11 @@
+{% extends 'index.html' %}
+{% block content%}
+{% for group, parameters in parameters_by_group.items %}
+    <h2>{{ group }}</h2>
+    <ul>
+        {% for parameter in parameters %}
+            <li>{{ parameter.p_name }} - {{ parameter.p_unit }} - {{ parameter.p_normalRange }}</li>
+        {% endfor %}
+    </ul>
+{% endfor %}
+{% endblock %}
