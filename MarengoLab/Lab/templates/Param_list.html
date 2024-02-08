@@ -4,8 +4,24 @@
     <h2>{{ group }}</h2>
     <ul>
         {% for parameter in parameters %}
-            <li>{{ parameter.p_name }} - {{ parameter.p_unit }} - {{ parameter.p_normalRange }}</li>
+            <li>
+                <h5>{{ parameter.parameter.p_name }}</h5>
+                <p>Unit: {{ parameter.parameter.p_unit }}</p>
+                <ul>
+                    {% for normal_range in parameter.normal_ranges %}
+                        <li>
+                            {% if normal_range.gender == '0' %}
+                                <strong>Male:</strong> {{ normal_range.range_value }}
+                            {% elif normal_range.gender == '1' %}
+                                <strong>Female:</strong> {{ normal_range.range_value }}
+                            {% endif %}
+                        </li>
+                    {% endfor %}
+                </ul>
+            </li>
         {% endfor %}
     </ul>
 {% endfor %}
+
+
 {% endblock %}

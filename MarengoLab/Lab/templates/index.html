@@ -62,10 +62,8 @@
     
         <nav class="navbar navbar-expand-sm bg-dark" data-bs-theme="dark">
         <div class="container-fluid">
-          <a class="navbar-brand" href="#">Navbar</a>
-          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarColor02" aria-controls="navbarColor02" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-          </button>
+          <h3>Marengo lab</h3>
+         <div style="padding-left: 40%;">
           <div class="collapse navbar-collapse" id="navbarColor02">
             <ul class="navbar-nav me-auto">
               <li class="nav-item">
@@ -88,6 +86,7 @@
                   <div class="dropdown-divider"></div>
                   <a class="dropdown-item" href="#">Separated link</a>
                 </div>
+                </div>
               </li>
             </ul>
           </div>
@@ -99,31 +98,22 @@
             <div class="row flex-nowrap" >
                 <div class="col-auto col-md-3 col-xl-2 px-sm-2 px-0 ">
                     <div class="d-flex flex-column align-items-center align-items-sm-start px-3 pt-2  min-vh-100">
-                        <a href="/" >
-                            <span class="fs-5 d-none d-sm-inline">Dashboard</span>
-                        </a>
+                       
                         <ul class="nav nav-pills flex-column mb-sm-auto mb-0 align-items-center align-items-sm-start" id="menu">
-                            <li class="nav-item">
-                                <a href="register" class="nav-link align-middle px-0" > 
-                                    <span class="ms-1 d-none d-sm-inline" >Register patient</span>
-                                </a>
-                            </li>
-                            <li>
-                                <a href="#" data-bs-toggle="collapse" class="nav-link align-middle px-0" >
-                                    <i class="fs-4 bi-speedometer2"></i> <span class="ms-1 d-none d-sm-inline"> Patients</span> </a>
-                                    <ul class="collapse show nav flex-column ms-1" id="submenu1" data-bs-parent="#menu">
-                                        <li class="w-100">
-                                            <a href="test" class="nav-link px-0"> View patients </a>
-                                        </li>
-                                        <li>
-                                            <a href="#" class="nav-link px-0"> <span class="d-none d-sm-inline">Item</span> 2 </a>
-                                        </li>
-                                    </ul>
-                                </li>
+                            
+                           
                                 <li>
-                                    <a href="#" class="nav-link align-middle px-0">
-                                        <i class="fs-4 bi-table"></i> <span class="ms-1 d-none d-sm-inline">Orders</span></a>
-                                </li>
+                                  <a href="#submenu1" data-bs-toggle="collapse" class="nav-link px-0 align-middle ">
+                                      <i class="fs-4 bi-bootstrap"></i> <span class="ms-1 d-none d-sm-inline">Patients</span></a>
+                                  <ul class="collapse nav flex-column ms-1" id="submenu1" data-bs-parent="#menu">
+                                      <li class="w-100">
+                                          <a href="register" class="nav-link px-0"> <span class="d-none d-sm-inline">Register patient</span> </a>
+                                      </li>
+                                      <li>
+                                          <a href="test" class="nav-link px-0"> <span class="d-none d-sm-inline">View patients</span> </a>
+                                      </li>
+                                  </ul>
+                              </li>
                                 <li>
                                     <a href="#submenu2" data-bs-toggle="collapse" class="nav-link px-0 align-middle ">
                                         <i class="fs-4 bi-bootstrap"></i> <span class="ms-1 d-none d-sm-inline">Samples</span></a>
@@ -149,10 +139,7 @@
     
                                     </ul>
                                 </li>
-                                <li>
-                                    <a href="#" class="nav-link px-0 align-middle" onclick="showdiv('div3')">
-                                        <i class="fs-4 bi-people"></i> <span class="ms-1 d-none d-sm-inline" >Customers</span> </a>
-                                </li>
+                             
                           
                             </ul>
                             <hr>
@@ -209,7 +196,7 @@
                
     
     
-                        <div id='1' class='container' style='background-color:blue;'>
+                        <div id='1' class='container' style='background-color:rgb(140, 116, 197);'>
                           <!--div id="div1" class="content" style="display:none;"-->
                         
                           {% block content%}

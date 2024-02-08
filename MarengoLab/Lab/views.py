@@ -1,6 +1,6 @@
 from django.shortcuts import render
 from django.http import HttpResponseNotAllowed, HttpResponse
-from .models import Patient , Group,Parameters, Sample
+from .models import Patient , Group,Parameter, Sample , NormalRange
 from .forms import RegisterPatientForm
 from django.contrib import messages
 from django.http import JsonResponse
@@ -79,7 +79,14 @@ def update_patient(request):
             model_instance.save()
             
             # Return a JSON response indicating success
-            return JsonResponse({'success': True})
+            return JsonResponse({'success': True, 'data':{
+                'first_name': model_instance.f_name,
+                 'last_name': model_instance.l_name,
+                 'age': model_instance.age,
+                 'email': model_instance.email,
+                 'telephone_number': model_instance.tel_num,
+                 'comment': model_instance.comment
+            }})
         
         except Patient.DoesNotExist:
             # Return a JSON response indicating failure if the model instance does not exist
@@ -89,17 +96,35 @@ def update_patient(request):
     
 
 def Param_list(request):
-    groups = Group.objects.all()
     parameters_by_group = {}
 
-    for group in groups:
-        parameters = Parameters.objects.filter(group=group).values('p_name').distinct()
-        parameters_by_group[group] = parameters
+    # Fetch all parameter groups
+    parameter_groups = Group.objects.all()
+
+    for group in parameter_groups:
+        # Fetch parameters for each group
+        parameters = Parameter.objects.filter(group=group).values('p_name', 'p_unit','param_id')
+        parameters_with_ranges = []
+
+        for parameter in parameters:
+            # Fetch normal ranges for each parameter
+            normal_ranges = NormalRange.objects.filter(parameter=parameter['param_id']).values('gender', 'range_value')
+
+            # Create a dictionary to store the parameter and its normal ranges
+            parameter_with_ranges = {
+                'parameter': parameter,
+                'normal_ranges': normal_ranges
+            }
+
+            parameters_with_ranges.append(parameter_with_ranges)
+
+        parameters_by_group[group] = parameters_with_ranges
 
     context = {
-        'parameters_by_group': parameters_by_group}
-    
-    return render(request,'Param_list.html',context)
+        'parameters_by_group': parameters_by_group
+    }
+
+    return render(request, 'Param_list.html', context)
 
 
 def Add_Sample(request):
