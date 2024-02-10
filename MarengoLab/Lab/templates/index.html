@@ -122,8 +122,11 @@
                                             <a href="viewParam" class="nav-link px-0"> <span class="d-none d-sm-inline">View parameters</span> </a>
                                         </li>
                                         <li>
-                                            <a href="addSample" class="nav-link px-0"> <span class="d-none d-sm-inline">Add sample</span> </a>
+                                            <a href="addSample" class="nav-link px-0"> <span class="d-none d-sm-inline">Add samples</span> </a>
                                         </li>
+                                        <li>
+                                          <a href="ViewSample" class="nav-link px-0"> <span class="d-none d-sm-inline">View samples</span> </a>
+                                      </li>
                                     </ul>
                                 </li>
                                 <li>
@@ -168,7 +171,7 @@
                           <div class="card bg-info">
                           <div class="card-header">N° of patients</div>
                           <div class="card-body">
-                            <p class="card-text">0</p>
+                            <p class="card-text">{{patient_count}}</p>
                           </div>
                           </div>
                         </div>
@@ -176,9 +179,9 @@
                         
                          <div class="column ">
                           <div class="card bg-danger">
-                          <div class="card-header">Date </div>
+                          <div class="card-header">Number of pending samples </div>
                           <div class="card-body">
-                            <p class="card-text">15/10/2023</p>
+                            <p class="card-text">{{pending_count}}</p>
                           </div>
                         </div>
                         </div>
@@ -187,7 +190,7 @@
                           <div class="card bg-danger">
                           <div class="card-header">Date</div>
                           <div class="card-body">
-                            <p class="card-text">15/10/2023</p>
+                            <p class="card-text">{{ current_date|date:"F d, Y" }}</p>
                           </div>
                         </div>
                         </div>
@@ -221,7 +224,7 @@
                                   </thead>
                                   <tbody>
                                   <tr class="table-active">
-                                  <th scope="row">Sonia</th>
+                                  <th scope="row">{{current_date}}</th>
                                   <td>Tad</td>
                                   <td>female</td>
                               
@@ -235,6 +238,7 @@
                       </main>
                 </div> <!--I've just added it-->
                     </div>
+
                 
     
       

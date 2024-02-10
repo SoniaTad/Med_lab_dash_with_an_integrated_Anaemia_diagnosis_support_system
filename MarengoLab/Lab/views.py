@@ -4,11 +4,17 @@ from .models import Patient , Group,Parameter, Sample , NormalRange
 from .forms import RegisterPatientForm
 from django.contrib import messages
 from django.http import JsonResponse
+import json
 #from django.core.exceptions import ValidationError
 from django.middleware.csrf import get_token
+from datetime import datetime
 # Create your views here.
 def home_page(request):
-    return render(request,'index.html')
+    pending_count = Sample.objects.filter(status='P').count()
+    patient_count = Patient.objects.count()
+    current_date = datetime.now().date()
+    context = {'patient_count': pending_count, 'patient_count':patient_count,'current_date':current_date}
+    return render(request,'index.html',context)
 
 def register_patient(request):
     if request.method == 'POST':
@@ -148,12 +154,72 @@ def Add_Sample(request):
         Sample_row.group=group_rows
         Sample_row.save()
         ##########################" thinking of changing thid message to have it within another if statement if row was saved "
+        row_added= True
         messages.success(request, 'Sample has been added')
     else:
-        messages.error(request, 'error')
+        row_added = False
 
 
-    return render(request,'Add_sample.html',{'Patient_data':Patient_data,'Group_data':Group_data})
+    return render(request,'Add_sample.html',{'Patient_data':Patient_data,'Group_data':Group_data, 'row_added':row_added})
+
+
+
+
+def ViewSample(request): 
+    csrf_token = get_token(request)
+    
+    rows = Sample.objects.select_related('patient').all()
+    return render(request,'View_Sample.html',{'rows':rows,'csrf_token':csrf_token})
+
+
+
+def delete_sample(request,id):
+     
+     if request.method == 'DELETE':
+        try:
+            # Filter the rows per sample ID 
+           
+            ROW=Sample.objects.filter(sample_ID=id).first()
+            if ROW:
+                ROW.delete()
+
+          
+            # Return a success response
+            return HttpResponse(status=204) 
+        except Patient.DoesNotExist:
+            # If the row doesn't exist, return a not found response
+            return HttpResponse(status=404)  # 404 Not Found
+     else:
+       return HttpResponseNotAllowed(['DELETE'])
+    
+
+
+def update_sample(request):
+    if request.method == 'POST':
+        # Get the rowId from the POST data
+        id = request.POST.get('sample_ID')
+        status = request.POST.get('status')
+       
+        try:
+            # Retrieve the model instance based on the rowId
+            model_instance = Sample.objects.get(sample_ID=id)
+            
+            # Update the model fields with the form data
+            model_instance.status = status
+            
+            # ... and so on for other fields
+            
+            # Save the changes to the model instance
+            model_instance.save()
+            
+            # Return a JSON response indicating success
+            return JsonResponse({'success': True})
+        
+        except Patient.DoesNotExist:
+            # Return a JSON response indicating failure if the model instance does not exist
+            return JsonResponse({'success': False, 'message': 'Model instance does not exist'})
+    else:
+        return JsonResponse({'success': False, 'message': 'Invalid request method'})
     
    
 

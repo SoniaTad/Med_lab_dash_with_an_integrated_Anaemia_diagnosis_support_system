@@ -27,10 +27,16 @@
 </select>
 <input type="submit" value="submit">
 </form>
-{% if messages %}
+
+  {% if row_added %}
+  {% if messages %}
 {% for message in messages %}
   <div class="alert alert-{{ message.tags }}">{{ message }}</div>
 {% endfor %}
 {% endif %}
+    
+  {% endif %}
+
+
 </div>
 {% endblock %}

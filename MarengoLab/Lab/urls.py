@@ -7,5 +7,8 @@ urlpatterns =[
     path('delete/<int:id>/',views.delete_patient),
     path('update-patient/',views.update_patient,name='update'),
     path('viewParam',views.Param_list),
-    path('addSample',views.Add_Sample)
+    path('addSample',views.Add_Sample),
+    path('ViewSample',views.ViewSample),
+    path('Delete/<int:id>/',views.delete_sample),
+    path('update-sample/',views.update_sample)
 ]
