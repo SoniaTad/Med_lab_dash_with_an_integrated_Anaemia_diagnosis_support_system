@@ -1,6 +1,6 @@
 from django.shortcuts import render
 from django.http import HttpResponseNotAllowed, HttpResponse
-from .models import Patient , Group,Parameter, Sample , NormalRange
+from .models import Patient , Group,Parameter, Sample , NormalRange, results
 from .forms import RegisterPatientForm
 from django.contrib import messages
 from django.http import JsonResponse
@@ -221,6 +221,55 @@ def update_sample(request):
     else:
         return JsonResponse({'success': False, 'message': 'Invalid request method'})
     
+
+
+def ViewResult(request): 
+    csrf_token = get_token(request)
+    
+    rows = results.objects.all()
+    
+
+    # Convert the JSON fields to Python objects
+    for result in rows:
+        result.parameters = json.loads(result.parameters)
+        result.values = json.loads(result.values)
+
+    # Pass the results objects to the template context
+    context = {
+        'rows': rows
+    }
+    return render(request,'View_Result.html',{'rows':rows,'csrf_token':csrf_token})
+
+
+def update_result(request):
+    if request.method == 'POST':
+        # Get the rowId from the POST data
+        id = request.POST.get('result_ID')
+        print(id)
+        KeyVal = request.POST.get('VALUES')
+       
+        try:
+            # Retrieve the model instance based on the rowId
+        
+            result = results.objects.get(result_ID=id)
+        
+            
+            result.values = KeyVal
+            result.save()
+            result.values = json.loads(result.values)
+            
+            
+            
+            
+            # Return a JSON response indicating success
+            return JsonResponse({'success': True, 'values': result.values})
+        
+        except Patient.DoesNotExist:
+            # Return a JSON response indicating failure if the model instance does not exist
+            return JsonResponse({'success': False, 'message': 'Model instance does not exist'})
+    else:
+        return JsonResponse({'success': False, 'message': 'Invalid request method'})
+
    
 
     

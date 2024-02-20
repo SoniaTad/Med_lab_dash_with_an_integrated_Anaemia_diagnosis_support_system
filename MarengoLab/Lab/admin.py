@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Patient,Parameter,Group,Sample,NormalRange
+from .models import Patient,Parameter,Group,Sample,NormalRange, results
 # Register your models here.
 class PatientAdmin(admin.ModelAdmin):
   list_display = ("patient_id", "l_name", "f_name",)
@@ -30,3 +30,10 @@ class SampleAdmin(admin.ModelAdmin):
   def get_patient(self,object):
     return object.patient.l_name
 admin.site.register(Sample,SampleAdmin)
+
+##################################################
+class ResultsAdmin(admin.ModelAdmin):
+  list_display = ("result_ID", "sample","parameters","values")
+  def get_sample(self,object):
+    return object.sample.sample_ID
+admin.site.register(results,ResultsAdmin)

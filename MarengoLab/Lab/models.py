@@ -1,6 +1,10 @@
 from django.db import models
 from django.core.validators import MinValueValidator, MaxValueValidator
 from datetime import date
+from django.db.models.signals import post_save
+from django.dispatch import receiver
+import json
+
 # creating the patient model
 class Patient(models.Model):
     Gender_type=[('0','Male'),('1','Female')]
@@ -75,16 +79,60 @@ class Sample(models.Model):
    
 
     def __str__(self):
-        return self.sample_ID
+        return str(self.sample_ID)
     
 #####################################
 
-class Result(models.Model):
+class results(models.Model):
     result_ID = models.AutoField(primary_key=True)
-    value = models.IntegerField()
-    sample_details = models.ForeignKey(Sample, on_delete=models.CASCADE)
-    p_details = models.ForeignKey(Parameter, on_delete=models.CASCADE)
+    values = models.JSONField(null=True) 
+    sample = models.ForeignKey(Sample, on_delete=models.CASCADE)
+    parameters = models.JSONField(null=True)
 
 
     def __str__(self):
-        return self.result_ID,self.value
+        
+        result_str = str(self.result_ID)
+         # Check the type of the result_str variable
+        return result_str
+    
+    
+@receiver(post_save, sender=Sample)
+def create_result(sender, instance, created, **kwargs):
+    if created:
+        # Retrieve the parameters from the Parameter table based on the sample type
+        parameters = Parameter.objects.filter(group=instance.group)
+        result = results.objects.create(sample=instance)
+        
+        # Create the parameters dictionary
+        parameters_dict = {}
+        values_dict = {}
+        for parameter in parameters:
+            # Retrieve the unit from the Parameter model
+            unit = parameter.p_unit
+            
+            # Retrieve the normal range based on the parameter and gender
+            normal_range = NormalRange.objects.get(parameter=parameter, gender=instance.patient.gender)
+            
+            # Create the parameter dictionary with name, unit, and normal range
+            parameter_dict = {
+                'name': parameter.p_name,
+                'unit': unit,
+                'normal_range': normal_range.range_value,
+            }
+            
+            # Add the parameter dictionary to the parameters dictionary
+            parameters_dict[parameter.p_name] = parameter_dict
+            
+            # Add the parameter name to the values dictionary with a None value
+            values_dict[parameter.p_name] = None
+        
+        # Convert the parameters and values dictionaries to JSON
+        parameters_json = json.dumps(parameters_dict)
+        values_json = json.dumps(values_dict)
+        
+        # Set the parameters and values fields of the Result instance
+        result.parameters = parameters_json
+        result.values = values_json
+        result.save()
+        
