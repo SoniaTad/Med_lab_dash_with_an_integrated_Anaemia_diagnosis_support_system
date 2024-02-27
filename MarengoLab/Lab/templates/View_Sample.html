@@ -1,0 +1,187 @@
+{% extends 'index.html' %}
+{% block content%}
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Patient</th>
+            <th>Status</th>
+            <th>Group</th>
+            <th>Date</th>
+            <th>Details</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for row in rows %}
+            <tr data-row-id="{{row.sample_ID}}">
+                <td>{{ row.sample_ID}}</td>
+                <td>{{ row.patient.l_name }} {{ row.patient.f_name }}</td>
+                {% if row.status == 'P' %}
+                <td>Pending</td>
+                {% elif row.status == 'D' %}
+                <td>Done</td>
+            {% endif %}
+                <td>{{ row.group }}</td>
+                <td>{{ row.date }}</td>
+                <td>
+                    
+                
+                <button type="button" class="btn btn-primary" data-bs-toggle="modal"  data-bs-target="#modal2{{ row.sample_ID }}">Delete</button>
+                <button type="button" class="btn btn-primary"  data-bs-toggle="modal" data-bs-target="#modal3{{row.sample_ID}}">Update</button>
+        
+              </td>
+            </tr>
+
+        {% endfor %}
+    </tbody>
+</table>
+{% for row in rows %}
+<div class="modal fade" id="modal2{{ row.sample_ID }}" tabindex="-1" role="dialog" aria-labelledby="modal{{ row.sample_ID }}Label" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="modal{{ row.sample_ID }}Label">Details for Row {{ row.sample_ID }}</h5>
+                <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+             <p>Are you sure you would like to delete the row? </p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button type="button" data-id="{{ row.sample_ID }}" class="delete-button btn btn-secondary " >Delete</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div class="modal fade" id="modal3{{ row.sample_ID }}" tabindex="-1" role="dialog" aria-labelledby="modal{{ row.sample_ID}}Label" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="modal{{ row.sample_ID }}Label">Details for Row {{ row.sample_ID}}</h5>
+                <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="updateForm{{row.sample_ID}}">
+                    <div class="mb-3">
+                        <label for="statusSelect{{row.sample_ID}}" class="form-label">Status:</label>
+                        <select class="form-select" id="statusSelect{{row.sample_ID}}">
+                            <option value="P">Pending</option>
+                            <option value="D">Done</option>
+                        </select>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" onclick="updateStatus('{{row.sample_ID}}')">Save changes</button>
+            </div>
+        
+             
+        
+       
+           
+        </div>
+    </div>
+</div>
+{% endfor %}
+
+
+
+
+<script>
+    // JavaScript code to handle the delete button click event
+    
+    const deleteButtons = document.querySelectorAll('.delete-button');
+    deleteButtons.forEach(button => {
+      button.addEventListener('click', () => {
+        const id = button.dataset.id;
+        var token = "{{ csrf_token }}";
+        console.error(token);
+
+        const rowElement = document.querySelector(`tr[data-row-id="${id}"]`);
+        
+        
+        
+        // Send an AJAX request to delete the row
+        // You can use fetch or any other AJAX library to send the request
+        fetch(`/Delete/${id}`, {
+          method: 'DELETE',
+          headers: {
+            'X-CSRFToken': token},
+            
+        })
+        .then(response => {
+          if (response.ok) {
+            // Row deleted successfully, update the UI
+            rowElement.remove();
+            const modal = button.closest('.modal');
+            const modalInstance = bootstrap.Modal.getInstance(modal);
+            modalInstance.hide();
+            alert('Row has been deleted');
+          } else {
+            // Handle error response
+            console.error('Failed to delete row');
+          }
+        })
+        .catch(error => {
+          // Handle network or other errors
+          console.error('Failed to delete row', error);
+        });
+      });
+    });
+    </script>
+
+<script>
+    function updateStatus(sampleId) {
+  // Get the selected status from the dropdown
+  var statusSelect = document.getElementById('statusSelect' + sampleId);
+  var selectedStatus = statusSelect.value;
+
+  // Create a FormData object and append the sample ID and selected status
+  var formData = new FormData();
+  formData.append('sample_ID', sampleId);
+  formData.append('status', selectedStatus);
+
+  // Send the AJAX request
+  fetch('/update-sample/', {
+    method: 'POST',
+    body: formData,
+    headers: {
+      'X-CSRFToken': '{{ csrf_token }}'
+    }
+  })
+    .then(response => response.json())
+    .then(data => {
+      if (data.success) {
+        // Update the UI with the new status
+        var statusCell = document.querySelector(`tr[data-row-id="${sampleId}"] td:nth-child(3)`);
+        statusCell.textContent = (selectedStatus === 'P') ? 'Pending' : 'Done';
+
+        // Close the modal
+        var modal = document.getElementById('modal3' + sampleId);
+        var bootstrapModal = bootstrap.Modal.getInstance(modal);
+        bootstrapModal.hide();
+
+        // Show a success message
+        alert('Status updated successfully!');
+      } else {
+        // Show an error message
+        alert('Failed to update the status: ' + data.error);
+      }
+    })
+    .catch(error => {
+      // Show an error message
+      alert('Failed to update the status: ' + error);
+    });
+}
+
+</script>
+
+{% endblock %}
