@@ -1,0 +1,42 @@
+version: '3'
+services:
+  db:
+    image: mysql:latest
+    container_name: mysql
+    restart: always
+    volumes:
+      - data:/var/lib/mysql
+    env_file:
+      - .env 
+      
+    ports:
+      - "3306:3306"
+   
+  
+  app:
+    build: .
+    links:
+      - db
+    container_name: django
+    command: sh -c " cd /code/MarengoLab/ && python manage.py runserver 0.0.0.0:8000"
+    restart: always
+    volumes:
+      - .:/code
+    ports:
+      - "8000:8000"
+    
+    depends_on:
+      - db
+  model:
+    build: ./model_API/
+    links:
+     - app
+    ports:
+     - "8443:8443"
+    depends_on:
+      - app  
+
+
+
+volumes:
+  data:

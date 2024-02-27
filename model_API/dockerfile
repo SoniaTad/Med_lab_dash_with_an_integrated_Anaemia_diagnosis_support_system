@@ -1,0 +1,13 @@
+FROM python:3.12-slim
+# create a dir 
+WORKDIR /model 
+COPY requirements.txt /model/
+COPY main.py /model/
+COPY KNN_model.pkl /model/
+COPY scaler.pkl /model/
+# get the requirements 
+# get main.py 
+# make the api available to the other containers 
+RUN pip install --no-cache-dir -r requirements.txt
+
+CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8443"]
