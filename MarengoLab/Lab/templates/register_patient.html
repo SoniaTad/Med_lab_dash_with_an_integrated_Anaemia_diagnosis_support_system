@@ -1,0 +1,66 @@
+{% extends 'index.html' %}
+{% block content%}
+
+<h4>Registration form </h4>
+{% if clean_data %}
+{% if messages %}
+{% for message in messages %}
+{% if message.tags == "success" %}
+<div class="alert alert-{{ message.tags }}"> {{ message }}  </div> 
+
+{% else %}
+<div class="alert alert-danger"> {{ message }}  </div> 
+{% endif %}
+{% endfor %}
+{% endif %}
+
+{% endif %}
+<form method="post" class="bootstrap-styles">
+    
+    {% csrf_token %}
+    <div class="form-row">
+        <div class="form-group col-md-6">
+            <label for="f_name">First Name</label>
+            <input type="text" class="form-control" id="f_name" name="f_name">
+        </div>
+        <div class="form-group col-md-6">
+            <label for="l_name">Last Name</label>
+            <input type="text" class="form-control" id="l_name" name="l_name">
+        </div>
+    </div>
+    <div class="form-row">
+        <div class="form-group col-md-6">
+            <label for="age">Age</label>
+            <input type="number" class="form-control" id="age" name="age" min="0" max="120">
+        </div>
+        <div class="form-group col-md-6">
+            <label for="gender">Gender</label>
+            <select class="form-control" id="gender" name="gender">
+                <option value="0">Male</option>
+                <option value="1">Female</option>
+            </select>
+        </div>
+    </div>
+    <div class="form-row">
+        <div class="form-group col-md-6">
+            <label for="email">Email</label>
+            <input type="email" class="form-control" id="email" name="email">
+        </div>
+        <div class="form-group col-md-6">
+            <label for="tel_num">Telephone Number</label>
+            <input type="text" class="form-control" id="tel_num" name="tel_num">
+        </div>
+    </div>
+    <div class="form-group col-md-6">
+        <label for="comment">Comment</label>
+        <textarea class="form-control" id="comment" name="comment" rows="3"></textarea>
+    </div>
+    <br>
+    <button type="submit" class="btn btn-primary">Register</button>
+    
+</form>
+
+
+{% endblock %}
+
+  

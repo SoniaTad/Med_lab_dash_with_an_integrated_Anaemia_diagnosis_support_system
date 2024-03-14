@@ -1,0 +1,285 @@
+{% extends 'index.html' %}
+{% block content%}
+<h2>List of results</h2>
+<table class="table table-hover">
+    <thead>
+        <tr>
+            <th>Result_ID</th>
+            <th>Sample_ID</th>
+            <th>Group</th>
+            <th>Details</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for row in rows %}
+            <tr data-row-id="{{row.result_ID}}">
+                <td>{{ row.result_ID}}</td>
+            
+                <td>{{ row.sample.sample_ID }}</td>
+                <td>{{ row.sample.group }}</td>
+                
+                <td>
+                    
+                
+                <button type="button" class="btn btn-info" data-bs-toggle="modal"  data-bs-target="#modal2{{ row.result_ID }}">Details</button>
+                <button type="button" class="btn btn-warning"  data-bs-toggle="modal" data-bs-target="#modal3{{row.result_ID}}">Add results</button>
+                {% if row.sample.group.group_ID == 1 %}
+                <button type="button" onclick="prediction('{{row.result_ID}}')" class="btn btn-success" data-bs-toggle="modal"  data-bs-target="#modal1{{ row.result_ID }}">Predict</button>
+                  {% endif %}
+              </td>
+            </tr>
+
+        {% endfor %}
+    </tbody>
+</table>
+<br>
+
+{% for row in rows %}
+<div class="modal fade" id="modal2{{ row.result_ID }}" tabindex="-1" role="dialog" aria-labelledby="modal{{ row.result_ID }}Label" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="modal{{ row.result_ID }}Label">Details for Row {{ row.result_ID }}</h5>
+                <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+              <table class="table">
+                  <thead>
+                    <tr>
+                      <th>Name</th>
+                      <th>Value</th>
+                      <th>Unit</th>
+                      <th>Normal Range</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {% for key, value in row.parameters.items %}
+                    <tr data-id="{{row.result_ID}}">
+                      <td>{{ value.name }}</td>
+                      <td>
+                          {% for ky, val in row.values.items %}
+                          {% if ky == value.name %}
+                          {{ val }}
+                          {% endif %}
+                          {% endfor %}
+                        </td>
+                      
+                      <td>{{ value.unit }}</td>
+                      <td>{{ value.normal_range }}</td>
+                    </tr>
+                    {% endfor %}
+                  </tbody>
+                  </table>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            </div>
+                  
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="modal3{{ row.result_ID }}" tabindex="-1" role="dialog" aria-labelledby="modal{{ row.result_ID}}Label" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="modal{{ row.result_ID }}Label">Details for Row {{ row.result_ID}}</h5>
+                <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="updateform{{row.result_ID}}">
+                    <div class="mb-3">
+                        
+                        <table class="table">
+                            <thead>
+                              <tr>
+                                <th>Parameter</th>
+                                <th>Value</th>
+                              </tr>
+                            </thead>
+                            <tbody>
+                                {% for ky, val in row.values.items %}
+                                <tr>
+                                <td>
+                                      {{ ky }}
+                                </td>
+                                 
+                                  <td>
+
+                                    {% if val is None %}
+                                    <input type="text" id="UpdateForm{{row.result_ID}}" value="">
+                                    {% else %}
+                                     <input type="text" id="UpdateForm{{row.result_ID}}" value="{{ val }}">
+                                     {% endif %}
+                                 
+                                </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                          </table>    
+
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" onclick="updateValues('{{row.result_ID}}')">Save changes</button>
+            </div>
+
+
+
+
+
+
+
+</div>
+</div>
+</div>
+
+          
+
+{% endfor %}
+
+<script>
+ function updateValues(resultID) {
+  // Get all the input elements with the specified ID
+  var inputElements = document.querySelectorAll('#UpdateForm' + resultID);
+  alert(inputElements)
+
+  var keyValuePairs = {};
+
+  inputElements.forEach(function(inputElement) {
+    alert(inputElement)
+    var value = inputElement.value.trim();
+    alert(value)
+    var key = inputElement.parentElement.previousElementSibling.textContent.trim();
+    alert(key)
+
+    if (value === null || value === "") {
+      // Show an error message
+      errorOccurred = true;
+      alert('Please enter a value for ' + key);
+      return; // Exit the function if the value is null or empty
+    }
+    if (typeof value !== 'number') {
+  if (!isNaN(parseFloat(value))) {
+    value = parseFloat(value);
+  } else {
+    // Show an error message
+    alert('Please enter a valid float value for ' + key);
+    errorOccurred = true;
+    return; // Exit the function if the value is not a valid float
+  }
+}
+
+        
+    keyValuePairs[key] = value;
+    alert(keyValuePairs)
+  
+  });
+  var jsonString = JSON.stringify(keyValuePairs);
+  alert(jsonString)
+  alert(resultID)
+  if (Object.keys(keyValuePairs).length === 0) {
+  // Show an error message or take appropriate action
+  alert('The JSON string is empty.');
+  return; // Exit the function if the JSON string is empty
+}
+ else
+{
+  
+  var formData = new FormData();
+  formData.append('result_ID', resultID);
+  formData.append('VALUES', jsonString);
+  // Make a POST request to your view
+  if (!errorOccurred) {
+  fetch('/update-result/', {
+    method: 'POST',
+    headers: {
+
+      'X-CSRFToken': '{{ csrf_token }}'
+    },
+    body: formData
+  })
+  .then(response => response.json())
+    .then(data => {
+      if (data.success) {
+       
+        // Handle the response if needed
+       
+        var valueCells = document.querySelectorAll(`tr[data-id="${resultID}"] td:nth-child(2)`);
+        //valueCells.forEach((cell, index) => {
+         // cell.textContent = Object.values(data.values)[index];
+    
+          valueCells.forEach((cell, index) => {
+         var keys = Object.keys(data.values); // Get the keys of the data.values object
+          var key = keys[index]; // Get the key at the current index
+           var value = data.values[key]; // Get the corresponding value for the key
+            cell.textContent = value; // Update the cell's text content with the value
+
+
+          var modal = document.getElementById('modal3' + resultID);
+        var bootstrapModal = bootstrap.Modal.getInstance(modal);
+        bootstrapModal.hide();
+        
+        });
+        alert('Data updated successfully');
+      } 
+      else {
+        alert('Failed to update the status: ' + data.error);
+      }
+    })
+    .catch(error => {
+      // Show an error message
+      alert('Failed to update row : ' + error);
+    });
+}}}
+
+
+function prediction(resultId) {
+  var formData = new FormData();
+  formData.append('result_ID', resultId);
+  fetch('/get_prediction', {
+    method: 'POST',
+    body: formData,
+    headers: {
+      'X-CSRFToken': '{{ csrf_token }}'
+    }
+  })
+  .then(response => {
+    if (response.ok) {
+      return response.json();
+    } else {
+      throw new Error('Failed to get prediction');
+    }
+  })
+  .then(data => {
+    if (data.success === false) {
+      alert('Error: ' + data.message); // Display the error message in an alert
+    } else {
+      alert('Prediction: ' + data.prediction); // Display the prediction using data.prediction
+    }
+  })
+  .catch(error => {
+    console.error('Error:', error);
+    alert('Failed to get prediction'); // Handle the error, display an error message in the alert
+  });
+}
+
+
+
+
+
+
+
+
+
+
+
+</script>
+
+{% endblock %}

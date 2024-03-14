@@ -1,0 +1,57 @@
+<div class="container">
+    <form id ="login-form" method="post">
+        {% csrf_token %}
+    <label for="uname"><b>Username</b></label>
+    <input type="text" placeholder="Enter Username" name="uname" required>
+ 
+    <label for="psw"><b>Password</b></label>
+    <input type="password" placeholder="Enter Password" name="psw" required>
+
+
+ 
+   
+    <button  onclick="Click()" >Login</button>
+   
+   
+</form>
+</div>
+{% if check %}
+{% if messages %}
+{% for message in messages %}
+  <div>{{ message }}</div>
+{% endfor %}
+{% endif %}
+{% endif %}
+<script>
+    function Click() {
+    var formData = new FormData(document.getElementById('login-form'));
+    var token = "{{ csrf_token }}" ;
+    //alert(formData)
+    //alert(token)
+   
+    fetch('login', {
+  method: 'POST',
+  headers: {
+        'X-CSRFToken': token
+      },
+ 
+  body: formData
+})
+.then(response => response.json())
+.then(data => {
+  if (data.success) {
+    // redirecting depending on the user role and what dashboard they have access to
+   
+   
+    window.location.href = data.url;  
+  } else {
+   
+    alert(data.error);
+  }
+});
+
+
+}
+
+
+</script>
