@@ -308,8 +308,10 @@ def update_result(request):
             result.values = json.loads(result.values)
             # change the status of the sample linked to the result just updated
             #sample = results.objects.filter(result_ID=id).values('sample').first()
-            #sample_id=sample.sample_ID
-            #model_instance = Sample.objects.get(sample_ID=sample_id)
+            #model_instance = Sample.objects.get(sample_ID=sample['sample'])
+            #if model_instance:
+                #model_instance.status = 'D'
+                #model_instance.save()
 
             
             
