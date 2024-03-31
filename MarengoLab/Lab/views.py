@@ -45,7 +45,7 @@ def register_patient(request):
                 clean_data=True
                 messages.error(request,'invalid email form')
 
-            elif not re.match(r"^\+(?:[0-9] ?){6,14}[0-9]$", tel_num):
+            elif not re.match(r"^(?:[0-9] ?){6,14}[0-9]$", tel_num):
                 clean_data=True
                 messages.error(request,'invalid phone number')
             elif not( 0 <= age <= 110):
@@ -105,8 +105,8 @@ def update_patient(request):
 
         elif not re.match(r"[^@]+@[^@]+\.[^@]+", email):
             return JsonResponse({'success': False, 'message': 'Invalid email'})
-        
-        elif not re.match(r"^\+(?:[0-9] ?){6,14}[0-9]$", telephone_number):
+       
+        elif not re.match(r"^(?:[0-9] ?){6,14}[0-9]$", telephone_number):
             return JsonResponse({'success': False, 'message': 'Invalid telephone number'})
 
         # Age Validation
@@ -125,7 +125,7 @@ def update_patient(request):
             model_instance.email = email
             model_instance.tel_num = telephone_number
             model_instance.comment = comment
-            # ... and so on for other fields
+        
             
             # Save the changes to the model instance
             model_instance.save()
@@ -306,6 +306,11 @@ def update_result(request):
             result.values = KeyVal
             result.save()
             result.values = json.loads(result.values)
+            # change the status of the sample linked to the result just updated
+            #sample = results.objects.filter(result_ID=id).values('sample').first()
+            #sample_id=sample.sample_ID
+            #model_instance = Sample.objects.get(sample_ID=sample_id)
+
             
             
             
@@ -344,7 +349,7 @@ def get_prediction(request):
             result.values = json.loads(result.values)
             data = {
             "data": [[float(patient_gender), float(result.values.get('MCV')), float(result.values.get('hb'))]]}
-            response = requests.post('http://192.168.32.4:8443/predict', json=data)
+            response = requests.post('http://model:8443/predict', json=data)
 
         if response.status_code == 200:
             prediction = response.json()["predictions"]

@@ -18,7 +18,11 @@
                 <td>{{ row.patient_id}}</td>
                 <td>{{ row.f_name }}</td>
                 <td>{{ row.l_name }}</td>
-                <td>{{ row.gender }}</td>
+                {% if row.gender == '1' %}
+                <td>Female</td>
+                {% else %}
+                <td>Male</td>
+                {% endif %}
                 <td>
                     <button type="button" class="btn btn-info" data-bs-toggle="modal" data-bs-target="#modal1{{ row.patient_id }}">
                         Details
@@ -40,7 +44,7 @@
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="modal{{ row.patient_id }}Label">Details for Row {{ row.patient_id }}</h5>
+                    <h5 class="modal-title" id="modal{{ row.patient_id }}Label">Details of {{ row.f_name }} {{ row.l_name }}</h5>
                     <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
@@ -61,14 +65,18 @@
                     </tr>
                     <tr data4-row-id="{{row.patient_id}}">
                         <td>Gender:</td>
-                        <td id="gender">{{ row.gender }}</td>
+                        {% if row.gender == '1' %}
+                        <td id="gender">Female</td>
+                        {% else %}
+                        <td id="gender">Male</td>
+                        {% endif %}
                     </tr>
                     <tr data5-row-id="{{row.patient_id}}">
                         <td>Email:</td>
                         <td id="email">{{ row.email }}</td>
                     </tr>
                     <tr data6-row-id="{{row.patient_id}}">
-                        <td>Telephone Number:</td>
+                        <td>Number:</td>
                         <td id="tel">{{ row.tel_num }}</td>
                     </tr>
                     <tr data7-row-id="{{row.patient_id}}">
@@ -89,7 +97,7 @@
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="modal{{ row.patient_id }}Label">Details for Row {{ row.patient_id }}</h5>
+                    <h5 class="modal-title" id="modal{{ row.patient_id }}Label">Details of {{ row.f_name }} {{ row.l_name }}</h5>
                     <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
@@ -109,7 +117,7 @@
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="modal{{ row.patient_id }}Label">Details for Row {{ row.patient_id }}</h5>
+                    <h5 class="modal-title" id="modal{{ row.patient_id }}Label">Details of {{ row.f_name }} {{ row.l_name }}</h5>
                     <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
