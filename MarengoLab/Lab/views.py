@@ -376,11 +376,12 @@ def Login(request):
         user = authenticate(username=username, password=password)
         if user is not None:
             login(request,user)
-            return JsonResponse({'success':True,'url': '/'})
+            return redirect('home_page')
+            
            
         else:
             check =True
-            messages.error(request,'Cannot validate')
+            messages.error(request,'Wrong credentials! Please, try again')
 
 
      else:

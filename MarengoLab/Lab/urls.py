@@ -20,7 +20,7 @@ urlpatterns =[
     path('ViewResult', views.ViewResult, name='ViewResult'),
     path('get_prediction', views.get_prediction, name='getPrediction'),
 
-    path('login',views.Login),
+    path('login',views.Login, name='login'),
     path('logout',views.Logout),
     # Other URL patterns
 
