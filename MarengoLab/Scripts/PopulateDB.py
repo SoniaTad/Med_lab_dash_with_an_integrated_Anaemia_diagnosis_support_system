@@ -9,27 +9,22 @@ sys.path.append(projectDirectory)
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'MarengoLab.settings')
 django.setup()
 from Lab.models import Group, Parameter, NormalRange
-#class Command(BaseCommand):
-   # help = 'Populate models'
+
 
 
 def handle():
         
         username1="SONIA"
-       
         ps1="STAFF1234"
         supuname="ADMIN"
         ps2="ADMIN1234"
         #create a superuser(admin):
         User = get_user_model()
-        print(User)
+    
         if not User.objects.filter(username=supuname).exists():
             user = User.objects.create_superuser(
-                #username=options["user"],
                 username=supuname,
-                #password=options["password"],
                 password=ps2,
-                #email=options["email"]
             )
             print("created successfully.")
         else:
@@ -38,11 +33,9 @@ def handle():
         User = get_user_model()
         if not User.objects.filter(username=username1).exists():
             user2 = User.objects.create_user(
-                #username=options["user"],
                 username=username1,
-                #password=options["password"],
                 password=ps1,
-                #email=options["email"]
+              
             )
             print("created successfully.")
         else:
