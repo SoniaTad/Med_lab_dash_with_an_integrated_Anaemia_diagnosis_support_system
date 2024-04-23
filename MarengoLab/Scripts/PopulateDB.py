@@ -1,4 +1,5 @@
 from django.core.management.base import BaseCommand
+from django.contrib.auth import get_user_model
 import django
 import sys
 import os
@@ -8,10 +9,44 @@ sys.path.append(projectDirectory)
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'MarengoLab.settings')
 django.setup()
 from Lab.models import Group, Parameter, NormalRange
-class Command(BaseCommand):
-    help = 'Populate models'
+#class Command(BaseCommand):
+   # help = 'Populate models'
 
-    def handle(self, *args, **options):
+
+def handle():
+        
+        username1="SONIA"
+       
+        ps1="STAFF1234"
+        supuname="ADMIN"
+        ps2="ADMIN1234"
+        #create a superuser(admin):
+        User = get_user_model()
+        print(User)
+        if not User.objects.filter(username=supuname).exists():
+            user = User.objects.create_superuser(
+                #username=options["user"],
+                username=supuname,
+                #password=options["password"],
+                password=ps2,
+                #email=options["email"]
+            )
+            print("created successfully.")
+        else:
+            print('user exists')
+        #creating a regular user 
+        User = get_user_model()
+        if not User.objects.filter(username=username1).exists():
+            user2 = User.objects.create_user(
+                #username=options["user"],
+                username=username1,
+                #password=options["password"],
+                password=ps1,
+                #email=options["email"]
+            )
+            print("created successfully.")
+        else:
+            print('user exists')
         # Create groups
         group1, _ = Group.objects.get_or_create(group_name='hematology')
         group2, _ = Group.objects.get_or_create(group_name='hormonology')
@@ -29,4 +64,10 @@ class Command(BaseCommand):
         NormalRange.objects.get_or_create(parameter=param3, gender='0', range_value='35-50')
         NormalRange.objects.get_or_create(parameter=param3, gender='1', range_value='25-45')
 
-        self.stdout.write(self.style.SUCCESS('Models populated successfully.'))
+        print('done')
+
+
+
+# Add script
+if __name__ == '__main__':
+    handle()
