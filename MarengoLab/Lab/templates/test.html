@@ -1,6 +1,6 @@
 {% extends 'index.html' %}
 {% block content%}
-<h2>List of patients</h2>
+<h3  style="color: rgb(246, 242, 242); font-family: Georgia, 'Times New Roman', Times, serif;">List of patients :</h3>
 
 <table class="table table-hover" >
     <thead>
@@ -221,7 +221,7 @@ forms.forEach(form => {
     })
     .then(response => response.json())
     .then(data => {
-      alert(data)
+      
       if (data.success) {
         // Handle success case
         alert('Model row updated successfully!');
