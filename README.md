@@ -12,6 +12,7 @@ The system consists of 3 containers part of the same network :
 4. If step 3 worked go to step 5 else, try and look at the docker logs within the docker desktop app  to get an idea why its not working, any app running on the same ports as the Django app or mysql would have to be stopped .
 5. Run the following command to configure the database `docker compose run app  sh -c " cd /code/MarengoLab/  && python manage.py makemigrations "` and the second command `docker compose run app  sh -c " cd /code/MarengoLab/  && python manage.py migrate"`
 6. Run the script to populate the Group,Normal_range and parameters models as well as create a regular user and an admin user :`docker compose run app  sh -c " cd /code/MarengoLab/  && python Scripts/PopulateDB.py "`
-7. a message in the terminal will be printed out to confirm If step 6 was successful
-8. Use one of the usernames and passwords found in the PopulateDB.py script, which have been added for demo purposes only. 
+7. A message in the terminal will be printed out to confirm If step 6 was successful
+8. Use one of the usernames and passwords found in the PopulateDB.py script, which have been added for demo purposes only.
+9. Once done, run the following script to stop the running containers `docker compose down`
 # Additonal documents 
