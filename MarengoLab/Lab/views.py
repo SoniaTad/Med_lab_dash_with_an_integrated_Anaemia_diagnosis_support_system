@@ -9,7 +9,6 @@ import requests
 import re 
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
-#from django.core.exceptions import ValidationError
 from django.middleware.csrf import get_token
 from datetime import datetime
 @login_required(login_url='/login')
@@ -20,6 +19,7 @@ def home_page(request):
     context = {'patient_count': pending_count, 'patient_count':patient_count,'current_date':current_date}
     return render(request,'index.html',context)
 
+@login_required(login_url='/login')
 def register_patient(request):
     if request.method == 'POST':
         clean_data=False
@@ -64,10 +64,12 @@ def register_patient(request):
     
     return render(request, 'register_patient.html', {'form': form,'clean_data':clean_data})
 
+@login_required(login_url='/login')
 def test(request): 
     csrf_token = get_token(request)
     rows = Patient.objects.all()
     return render(request,'test.html',{'rows':rows,'csrf_token':csrf_token})
+
 
 def delete_patient(request,id):
      
@@ -115,8 +117,7 @@ def update_patient(request):
         try:
             # Retrieve the model instance based on the rowId
             model_instance = Patient.objects.get(patient_id=id)
-            ############# can add some code to check if name of a patient wasnt change to another 
-            ################# that way duplicates patients with # id would be avoided 
+          
             
             # Update the model fields with the form data
             model_instance.f_name = first_name
@@ -146,7 +147,7 @@ def update_patient(request):
     else:
         return JsonResponse({'success': False, 'message': 'Invalid request method'})
     
-
+@login_required(login_url='/login')
 def Param_list(request):
     parameters_by_group = {}
 
@@ -178,7 +179,7 @@ def Param_list(request):
 
     return render(request, 'Param_list.html', context)
 
-
+@login_required(login_url='/login')
 def Add_Sample(request):
     #this view will get the data from the template , check it then use it to create a row in the sample model 
     #flat is set to true to get a list instead of a list of tuples 
@@ -199,7 +200,7 @@ def Add_Sample(request):
         group_rows = Group.objects.get(group_name=g)
         Sample_row.group=group_rows
         Sample_row.save()
-        ##########################" thinking of changing thid message to have it within another if statement if row was saved "
+        
         row_added= True
         messages.success(request, 'Sample has been added')
     else:
@@ -210,7 +211,7 @@ def Add_Sample(request):
 
 
 
-
+@login_required(login_url='/login')
 def ViewSample(request): 
     csrf_token = get_token(request)
     
@@ -255,8 +256,7 @@ def update_sample(request):
             
             # Update the model fields with the form data
             model_instance.status = status
-            
-            # ... and so on for other fields
+        
             
             # Save the changes to the model instance
             model_instance.save()
@@ -271,7 +271,7 @@ def update_sample(request):
         return JsonResponse({'success': False, 'message': 'Invalid request method'})
     
 
-
+@login_required(login_url='/login')
 def ViewResult(request): 
     csrf_token = get_token(request)
     
@@ -312,10 +312,7 @@ def update_result(request):
             if model_instance:
                 model_instance.status = 'D'
                 model_instance.save()
-
-            
-            
-            
+           
             
             # Return a JSON response indicating success
             return JsonResponse({'success': True, 'values': result.values})
@@ -344,6 +341,7 @@ def get_prediction(request):
         for key in keys_to_check:
             if dicti.get(key) is None :
                 return JsonResponse({'success': False, 'message': f'The value of the parameter {key} is None please enter results first'})
+           
         if int(patient_age) < 15 :
             return JsonResponse({'success': False, 'message': ' Model cannot predict Anemia for a kid '})
         else:

@@ -149,16 +149,14 @@
   // Get all the input elements with the specified ID
   errorOccurred = false;
   var inputElements = document.querySelectorAll('#UpdateForm' + resultID);
-  alert(inputElements)
+
 
   var keyValuePairs = {};
 
   inputElements.forEach(function(inputElement) {
-    alert(inputElement)
     var value = inputElement.value.trim();
-    alert(value)
     var key = inputElement.parentElement.previousElementSibling.textContent.trim();
-    alert(key)
+  
 
     if (value === null || value === "") {
       // Show an error message
@@ -179,14 +177,13 @@
 
         
     keyValuePairs[key] = value;
-    alert(keyValuePairs)
+ 
   
   });
   var jsonString = JSON.stringify(keyValuePairs);
-  alert(jsonString)
-  alert(resultID)
+ 
   if (Object.keys(keyValuePairs).length === 0) {
-  // Show an error message or take appropriate action
+  // Show an error message 
   alert('The JSON string is empty.');
   return; // Exit the function if the JSON string is empty
 }
@@ -196,7 +193,7 @@
   var formData = new FormData();
   formData.append('result_ID', resultID);
   formData.append('VALUES', jsonString);
-  // Make a POST request to your view
+  
   if (!errorOccurred) {
   fetch('/update-result/', {
     method: 'POST',
@@ -209,12 +206,10 @@
   .then(response => response.json())
     .then(data => {
       if (data.success) {
-       
-        // Handle the response if needed
+     
        
         var valueCells = document.querySelectorAll(`tr[data-id="${resultID}"] td:nth-child(2)`);
-        //valueCells.forEach((cell, index) => {
-         // cell.textContent = Object.values(data.values)[index];
+       
     
           valueCells.forEach((cell, index) => {
          var keys = Object.keys(data.values); // Get the keys of the data.values object
@@ -260,7 +255,7 @@ function prediction(resultId) {
   })
   .then(data => {
     if (data.success === false) {
-      alert('Error: ' + data.message); // Display the error message in an alert
+      alert('Error: ' + data.message); 
     } else {
       if (data.prediction == "0") {
         alert('Patient does not have Aneamia');}
@@ -270,12 +265,12 @@ function prediction(resultId) {
         alert('Patient has Normocytic Aneamia');}
       else if (data.prediction == "3") {
         alert('Patient has Macrocytic Aneamia');}
-      //alert('Prediction: ' + data.prediction); // Display the prediction using data.prediction
+     
     }
   })
   .catch(error => {
     console.error('Error:', error);
-    alert('Failed to get prediction'); // Handle the error, display an error message in the alert
+    alert('Failed to get prediction');
   });
 }
 

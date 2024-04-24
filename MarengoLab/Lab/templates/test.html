@@ -160,9 +160,6 @@
         const rowElement = document.querySelector(`tr[data-row-id="${id}"]`);
         
         
-        
-        // Send an AJAX request to delete the row
-        // You can use fetch or any other AJAX library to send the request
         fetch(`/delete/${id}`, {
           method: 'DELETE',
           headers: {
@@ -186,7 +183,7 @@
           }
         })
         .catch(error => {
-          // Handle network or other errors
+        
           console.error('Failed to delete row', error);
           alert('Failed to delete row: ' + error.message);
         });
@@ -209,16 +206,12 @@ forms.forEach(form => {
   
   // Get the ID of the submit button
     var id = submitButton.dataset.id;
-    //var id = button.dataset.id;  
-    alert('here'+ id)
-    //var formData =  new FormData(document.getElementById('updateForm'));
+    
     var formData =  new FormData(document.querySelector(`form[data-button-id="${id}"]`));
     formData.append('id', id);
-    //var form = button.;
-    
     var token = "{{ csrf_token }}";
-    //formData += '&id=' + id;
-    alert('here'+ formData)
+  
+  
     fetch('/update-patient/', {
       method: 'POST',
       headers: {

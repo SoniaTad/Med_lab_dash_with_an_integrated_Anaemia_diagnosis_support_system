@@ -109,8 +109,6 @@
         
         
         
-        // Send an AJAX request to delete the row
-        // You can use fetch or any other AJAX library to send the request
         fetch(`/Delete/${id}`, {
           method: 'DELETE',
           headers: {
@@ -129,12 +127,12 @@
             response.text().then(errorMessage => {
             alert('Error: ' + errorMessage);
             });
-            // Handle error response
+         
             console.error('Failed to delete row');
           }
         })
         .catch(error => {
-          // Handle network or other errors
+      
           console.error('Failed to delete row', error);
           alert('Failed to delete row: ' + error.message);
         });
@@ -153,7 +151,7 @@
   formData.append('sample_ID', sampleId);
   formData.append('status', selectedStatus);
 
-  // Send the AJAX request
+
   fetch('/update-sample/', {
     method: 'POST',
     body: formData,

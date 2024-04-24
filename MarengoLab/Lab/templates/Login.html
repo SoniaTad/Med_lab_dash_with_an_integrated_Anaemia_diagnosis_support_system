@@ -23,8 +23,8 @@
         }
         .header {
             text-align: center;
-            margin-bottom: 20px;
-            background-color: rgba(57, 44, 44, 0.8);
+            margin-bottom: 30px;
+            background-color: rgba(255, 255, 255, 0.4);
         }
         .logo {
             width: 100px; /* Adjust the width as needed */
@@ -40,25 +40,25 @@
 <body>
     <div class="container2">
         <div class="header">
-            <h1 style="color: black;">Your Website Name</h1>
-            <img src="your-logo.png" alt="Logo" class="logo">
+            <h1 style="color: rgb(117, 1, 1);font-family:serif;">MARENGO LAB</h1>
+           
             
         </div>
         <form id="login-form" method="post">
           {% if check %}
           {% if messages %}
           {% for message in messages %}
-          <div>{{ message }}</div>
+          <div style="color: black;"><b>{{ message }}</b></div>
           {% endfor %}
           {% endif %}
           {% endif %}
             {% csrf_token %}
             <div class="form-group">
-                <label for="uname"><b>Username</b></label>
+                <label for="uname" style="color: white;"><b>Username</b></label>
                 <input type="text" class="form-control" placeholder="Enter Username" name="uname" required>
             </div>
             <div class="form-group">
-                <label for="psw"><b>Password</b></label>
+                <label for="psw"  style="color: white;"><b>Password</b></label>
                 <input type="password" class="form-control" placeholder="Enter Password" name="psw" required>
             </div>
             <br>
@@ -92,7 +92,7 @@
         
         window.location.href = response.url;
       } else {
-        alert('An error occurred while processing your request.');
+        alert('An error occurred, could not redirect you.');
       }
     });
     

@@ -5,7 +5,7 @@ from django.db.models.signals import post_save
 from django.dispatch import receiver
 import json
 
-# creating the patient model
+# creating the patient models
 class Patient(models.Model):
     Gender_type=[('0','Male'),('1','Female')]
     patient_id =models.AutoField(primary_key=True)
