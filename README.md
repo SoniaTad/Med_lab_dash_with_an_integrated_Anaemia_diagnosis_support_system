@@ -15,5 +15,6 @@ The system consists of 3 containers part of the same network :
 7. A message in the terminal will be printed out to confirm If step 6 was successful
 8. Use one of the usernames and passwords found in the PopulateDB.py script, which have been added for demo purposes only.
 9. Once done, run the following script to stop the running containers `docker compose down`
-# Additonal documents:
+# Additional documents:
 - https://github.com/SoniaTad/Anemia_model_eval/tree/main
+- https://github.com/SoniaTad/Best-model-compression-
